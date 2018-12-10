@@ -15,8 +15,14 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -116,7 +122,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         IWeatherService weatherService = App.get(this).getRetrofit().create(IWeatherService.class);
-        retrofit2.Call<WeatherResponce> weatherResponceCall = weatherService.getWeather("Simferopol", getResources().getString(R.string.weather_api_key), "metric");
+        final retrofit2.Call<WeatherResponce> weatherResponceCall = weatherService.getWeatherById(693805, getResources().getString(R.string.weather_api_key), "metric");
         weatherResponceCall.enqueue(new Callback<WeatherResponce>() {
             @Override
             public void onResponse(retrofit2.Call<WeatherResponce> call, Response<WeatherResponce> response) {
