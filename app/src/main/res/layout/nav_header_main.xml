@@ -30,15 +30,14 @@
 
 
     <TextView
-        android:id="@+id/tv_drawer_progress_bar_header"
+        android:id="@+id/tv_progress_bar_drawer_header"
         android:layout_width="wrap_content"
         android:layout_gravity="center"
         android:layout_height="wrap_content"
-        android:text="Please wait, connect to server"/>
+        android:text="Connecting to server"/>
     <ProgressBar
         android:layout_gravity="center"
-        android:id="@+id/progress_bar"
-        style="?android:attr/progressBarStyle"
+        android:id="@+id/progress_bar_drawer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

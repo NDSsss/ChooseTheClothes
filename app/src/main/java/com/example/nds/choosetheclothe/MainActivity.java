@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity
 
     TextView tvSityNameDate;
     TextView tvTemperature;
+    TextView tvStatusConnection;
+    ProgressBar pBarConnectionStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +59,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         tvSityNameDate = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_drawer_header_city_date);
-
+        tvStatusConnection= (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_progress_bar_drawer_header);
+        pBarConnectionStatus= (ProgressBar) navigationView.getHeaderView(0).findViewById(R.id.progress_bar_drawer);
         tvTemperature = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_drawer_header_teperatures);
         tvSityNameDate.setText("Simferopol");
 
@@ -127,21 +131,27 @@ public class MainActivity extends AppCompatActivity
         weatherResponceCall.enqueue(new Callback<WeatherResponce>() {
             @Override
             public void onResponse(retrofit2.Call<WeatherResponce> call, Response<WeatherResponce> response) {
+                tvStatusConnection.setVisibility(View.GONE);
+                pBarConnectionStatus.setVisibility(View.GONE);
                 handleWeatherResponce(response.body());
+
             }
 
             @Override
             public void onFailure(retrofit2.Call<WeatherResponce> call, Throwable t) {
+                tvTemperature.setText("Sorry, but server response is: " + t.getMessage());
+                tvStatusConnection.setVisibility(View.GONE);
+                pBarConnectionStatus.setVisibility(View.GONE);
                 showError(t.getMessage());
             }
         });
     }
 
     private void showError(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG);
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     private void handleWeatherResponce(WeatherResponce responce) {
-        tvSityNameDate.setText(responce.getName().concat(String.valueOf(responce.getMain().getTemp())));
+        tvTemperature.setText(responce.getName().concat(String.valueOf(responce.getMain().getTemp())));
     }
 }
