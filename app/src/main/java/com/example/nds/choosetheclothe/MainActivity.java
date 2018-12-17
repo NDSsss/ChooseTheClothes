@@ -1,6 +1,7 @@
 package com.example.nds.choosetheclothe;
 
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -12,8 +13,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.nds.choosetheclothe.adding.AddingFragment;
+import com.example.nds.choosetheclothe.interfaces.ILoadingListener;
+import com.example.nds.choosetheclothe.selection.SelectionFragment;
 
 import java.io.IOException;
 
@@ -25,15 +32,21 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ILoadingListener {
 
     TextView tvSityNameDate;
     TextView tvTemperature;
+    TextView tvStatusConnection;
+    ProgressBar pBarConnectionStatus;
+    ConstraintLayout clContainer;
+    RelativeLayout rlProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        clContainer = findViewById(R.id.cl_container);
+        rlProgress = findViewById(R.id.rl_progress);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -56,6 +69,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         tvSityNameDate = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_drawer_header_city_date);
+        tvStatusConnection= (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_progress_bar_drawer_header);
+        pBarConnectionStatus= (ProgressBar) navigationView.getHeaderView(0).findViewById(R.id.progress_bar_drawer);
         tvTemperature = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_drawer_header_teperatures);
         tvSityNameDate.setText("Simferopol");
 
@@ -100,9 +115,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            openAddingDragment();
         } else if (id == R.id.nav_gallery) {
-
+            openSelectionFragment();
         } else if (id == R.id.nav_slideshow) {
 
 //        } else if (id == R.id.nav_manage) {
@@ -118,6 +133,18 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    private void openSelectionFragment(){
+        SelectionFragment selectionFragment = new SelectionFragment();
+        selectionFragment.setLoadingListener(this);
+        getSupportFragmentManager().beginTransaction().replace(R.id.cl_container,selectionFragment).commit();
+    }
+
+    private void openAddingDragment(){
+        AddingFragment addingFragment = new AddingFragment();
+        addingFragment.setLoadingListener(this);
+        getSupportFragmentManager().beginTransaction().replace(R.id.cl_container,addingFragment).commit();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -126,21 +153,44 @@ public class MainActivity extends AppCompatActivity
         weatherResponceCall.enqueue(new Callback<WeatherResponce>() {
             @Override
             public void onResponse(retrofit2.Call<WeatherResponce> call, Response<WeatherResponce> response) {
+                tvStatusConnection.setVisibility(View.GONE);
+                pBarConnectionStatus.setVisibility(View.GONE);
                 handleWeatherResponce(response.body());
+
             }
 
             @Override
             public void onFailure(retrofit2.Call<WeatherResponce> call, Throwable t) {
+                tvTemperature.setText("Sorry, but server response is: " + t.getMessage());
+                tvStatusConnection.setVisibility(View.GONE);
+                pBarConnectionStatus.setVisibility(View.GONE);
                 showError(t.getMessage());
             }
         });
     }
 
     private void showError(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG);
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     private void handleWeatherResponce(WeatherResponce responce) {
-        tvSityNameDate.setText(responce.getName().concat(String.valueOf(responce.getMain().getTemp())));
+        tvTemperature.setText(responce.getName().concat(String.valueOf(responce.getMain().getTemp())));
     }
+
+    @Override
+    public void startLoading() {
+        rlProgress.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void completeLoading() {
+        rlProgress.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void errorLoading(String errorMessage) {
+
+    }
+
+
 }
