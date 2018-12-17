@@ -1,6 +1,7 @@
 package com.example.nds.choosetheclothe;
 
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -13,8 +14,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.nds.choosetheclothe.adding.AddingFragment;
+import com.example.nds.choosetheclothe.interfaces.ILoadingListener;
 
 import java.io.IOException;
 
@@ -26,17 +31,21 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ILoadingListener {
 
     TextView tvSityNameDate;
     TextView tvTemperature;
     TextView tvStatusConnection;
     ProgressBar pBarConnectionStatus;
+    ConstraintLayout clContainer;
+    RelativeLayout rlProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        clContainer = findViewById(R.id.cl_container);
+        rlProgress = findViewById(R.id.rl_progress);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -105,7 +114,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            openAddingDragment();
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -121,6 +130,12 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void openAddingDragment(){
+        AddingFragment addingFragment = new AddingFragment();
+        addingFragment.setLoadingListener(this);
+        getSupportFragmentManager().beginTransaction().replace(R.id.cl_container,addingFragment).commit();
     }
 
     @Override
@@ -154,4 +169,21 @@ public class MainActivity extends AppCompatActivity
     private void handleWeatherResponce(WeatherResponce responce) {
         tvTemperature.setText(responce.getName().concat(String.valueOf(responce.getMain().getTemp())));
     }
+
+    @Override
+    public void startLoading() {
+        rlProgress.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void completeLoading() {
+        rlProgress.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void errorLoading(String errorMessage) {
+
+    }
+
+
 }
