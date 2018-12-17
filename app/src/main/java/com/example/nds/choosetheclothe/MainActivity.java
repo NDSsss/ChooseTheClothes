@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,12 +35,14 @@ public class MainActivity extends AppCompatActivity
     TextView tvSityNameDate;
     TextView tvTemperature;
     ConstraintLayout clContainer;
+    RelativeLayout rlProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         clContainer = findViewById(R.id.cl_container);
+        rlProgress = findViewById(R.id.rl_progress);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -127,7 +130,7 @@ public class MainActivity extends AppCompatActivity
     private void openAddingDragment(){
         AddingFragment addingFragment = new AddingFragment();
         addingFragment.setLoadingListener(this);
-        getSupportFragmentManager().beginTransaction().replace(R.id.cl_container,addingFragment);
+        getSupportFragmentManager().beginTransaction().replace(R.id.cl_container,addingFragment).commit();
     }
 
     @Override
@@ -158,12 +161,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void startLoading() {
-
+        rlProgress.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void completeLoading() {
-
+        rlProgress.setVisibility(View.GONE);
     }
 
     @Override

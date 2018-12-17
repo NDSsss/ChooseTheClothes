@@ -2,8 +2,8 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:text="adding fragment"
+    <Button
+        android:id="@+id/btn_adding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <android.support.v4.widget.NestedScrollView

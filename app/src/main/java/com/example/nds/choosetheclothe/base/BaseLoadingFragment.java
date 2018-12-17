@@ -6,7 +6,7 @@ import com.example.nds.choosetheclothe.interfaces.ILoadingListener;
 
 public class BaseLoadingFragment extends Fragment {
 
-    private ILoadingListener mLoadingListener;
+    protected ILoadingListener mLoadingListener;
 
     public void setLoadingListener(ILoadingListener listener){
         mLoadingListener = listener;
