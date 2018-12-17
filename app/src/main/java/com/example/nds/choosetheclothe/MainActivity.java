@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.nds.choosetheclothe.adding.AddingFragment;
 import com.example.nds.choosetheclothe.interfaces.ILoadingListener;
+import com.example.nds.choosetheclothe.selection.SelectionFragment;
 
 import java.io.IOException;
 
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             openAddingDragment();
         } else if (id == R.id.nav_gallery) {
-
+            openSelectionFragment();
         } else if (id == R.id.nav_slideshow) {
 
 //        } else if (id == R.id.nav_manage) {
@@ -130,6 +131,12 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void openSelectionFragment(){
+        SelectionFragment selectionFragment = new SelectionFragment();
+        selectionFragment.setLoadingListener(this);
+        getSupportFragmentManager().beginTransaction().replace(R.id.cl_container,selectionFragment).commit();
     }
 
     private void openAddingDragment(){
