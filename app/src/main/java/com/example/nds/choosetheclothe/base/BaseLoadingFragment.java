@@ -2,9 +2,11 @@ package com.example.nds.choosetheclothe.base;
 
 import android.support.v4.app.Fragment;
 
+import com.example.nds.choosetheclothe.eventbus.Event;
+import com.example.nds.choosetheclothe.eventbus.IEventObserver;
 import com.example.nds.choosetheclothe.interfaces.ILoadingListener;
 
-public class BaseLoadingFragment extends Fragment {
+public class BaseLoadingFragment extends Fragment implements IEventObserver {
 
     protected ILoadingListener mLoadingListener;
 
@@ -24,4 +26,8 @@ public class BaseLoadingFragment extends Fragment {
         mLoadingListener.errorLoading(message);
     }
 
+    @Override
+    public void onEvent(Event event) {
+
+    }
 }

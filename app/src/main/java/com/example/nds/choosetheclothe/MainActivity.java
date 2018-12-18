@@ -13,12 +13,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nds.choosetheclothe.adding.AddingFragment;
+import com.example.nds.choosetheclothe.eventbus.EventBus;
+import com.example.nds.choosetheclothe.eventbus.events.UpdateTempEvent;
 import com.example.nds.choosetheclothe.interfaces.ILoadingListener;
 import com.example.nds.choosetheclothe.selection.SelectionFragment;
 import com.example.nds.choosetheclothe.selectioninfinite.SelectionInfiniteFragment;
@@ -41,11 +44,16 @@ public class MainActivity extends AppCompatActivity
     ProgressBar pBarConnectionStatus;
     ConstraintLayout clContainer;
     RelativeLayout rlProgress;
+    EventBus mEventBus;
+    SelectionInfiniteFragment infiniteScroll;
+    ImageView ivRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mEventBus = new EventBus();
+        createFragments();
         clContainer = findViewById(R.id.cl_container);
         rlProgress = findViewById(R.id.rl_progress);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -73,6 +81,8 @@ public class MainActivity extends AppCompatActivity
         tvStatusConnection= (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_progress_bar_drawer_header);
         pBarConnectionStatus= (ProgressBar) navigationView.getHeaderView(0).findViewById(R.id.progress_bar_drawer);
         tvTemperature = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_drawer_header_teperatures);
+        ivRefresh = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.ic_drawer_temp_refresh);
+        ivRefresh.setOnClickListener(v->loadTemp());
         tvSityNameDate.setText("Simferopol");
 
     }
@@ -134,10 +144,16 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void openInfiniteScrollFragment(){
-        SelectionInfiniteFragment infiniteScroll = new SelectionInfiniteFragment();
+    private void createFragments(){
+        infiniteScroll = new SelectionInfiniteFragment();
         infiniteScroll.setLoadingListener(this);
-        getSupportFragmentManager().beginTransaction().replace(clContainer.getId(),infiniteScroll).commitAllowingStateLoss();
+        mEventBus.addObserver(infiniteScroll);
+    }
+
+    private void openInfiniteScrollFragment(){
+        if(infiniteScroll!=null) {
+            getSupportFragmentManager().beginTransaction().replace(clContainer.getId(), infiniteScroll).commitAllowingStateLoss();
+        }
     }
 
     private void openSelectionFragment(){
@@ -155,6 +171,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        loadTemp();
+    }
+
+    private void loadTemp(){
         IWeatherService weatherService = App.get(this).getRetrofit().create(IWeatherService.class);
         final retrofit2.Call<WeatherResponce> weatherResponceCall = weatherService.getWeatherById(693805, getResources().getString(R.string.weather_api_key), "metric");
         weatherResponceCall.enqueue(new Callback<WeatherResponce>() {
@@ -182,6 +202,7 @@ public class MainActivity extends AppCompatActivity
 
     private void handleWeatherResponce(WeatherResponce responce) {
         tvTemperature.setText(responce.getName().concat(String.valueOf(responce.getMain().getTemp())));
+        mEventBus.notifyEvent(new UpdateTempEvent(responce.getMain().getTemp()));
     }
 
     @Override
