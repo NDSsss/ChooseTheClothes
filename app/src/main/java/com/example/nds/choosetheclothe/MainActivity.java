@@ -20,20 +20,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nds.choosetheclothe.adding.AddingFragment;
+import com.example.nds.choosetheclothe.app.App;
 import com.example.nds.choosetheclothe.eventbus.EventBus;
 import com.example.nds.choosetheclothe.eventbus.events.UpdateTempEvent;
 import com.example.nds.choosetheclothe.interfaces.ILoadingListener;
 import com.example.nds.choosetheclothe.selection.SelectionFragment;
 import com.example.nds.choosetheclothe.selectioninfinite.SelectionInfiniteFragment;
+import com.example.nds.choosetheclothe.weather.IWeatherService;
+import com.example.nds.choosetheclothe.weather.WeatherResponce;
 
-import java.io.IOException;
-
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ILoadingListener {

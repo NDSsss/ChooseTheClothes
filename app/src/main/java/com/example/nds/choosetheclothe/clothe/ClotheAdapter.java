@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.nds.choosetheclothe.App;
 import com.example.nds.choosetheclothe.R;
 
 import java.util.ArrayList;

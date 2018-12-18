@@ -1,4 +1,4 @@
-package com.example.nds.choosetheclothe;
+package com.example.nds.choosetheclothe.app;
 
 import android.app.Application;
 import android.content.Context;
