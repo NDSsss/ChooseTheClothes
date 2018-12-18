@@ -25,7 +25,7 @@ public class HorizontalPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return clothes==null?0:clothes.size();
     }
 
     @Override
@@ -50,5 +50,12 @@ public class HorizontalPagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(final ViewGroup container, final int position, final Object object) {
         container.removeView((View) object);
+    }
+
+    public void setData(ArrayList<Clothe> clothes){
+        this.clothes = clothes;
+        super.notifyDataSetChanged();
+//        super.notifyAll();
+        notifyDataSetChanged();
     }
 }

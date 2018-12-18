@@ -8,4 +8,8 @@ public class UpdateTempEvent extends Event {
         mEventType = Event.UPDATE_TEMP;
         newTemp = temp;
     }
+
+    public double getNewTemp() {
+        return newTemp;
+    }
 }

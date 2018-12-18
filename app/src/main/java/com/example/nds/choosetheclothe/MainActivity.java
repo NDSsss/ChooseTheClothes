@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity
     private void createFragments(){
         infiniteScroll = new SelectionInfiniteFragment();
         infiniteScroll.setLoadingListener(this);
+        infiniteScroll.initData();
         mEventBus.addObserver(infiniteScroll);
     }
 
@@ -172,6 +173,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadTemp(){
+        tvStatusConnection.setVisibility(View.VISIBLE);
+        pBarConnectionStatus.setVisibility(View.VISIBLE);
         IWeatherService weatherService = App.get(this).getRetrofit().create(IWeatherService.class);
         final retrofit2.Call<WeatherResponce> weatherResponceCall = weatherService.getWeatherById(693805, getResources().getString(R.string.weather_api_key), "metric");
         weatherResponceCall.enqueue(new Callback<WeatherResponce>() {
@@ -180,7 +183,6 @@ public class MainActivity extends AppCompatActivity
                 tvStatusConnection.setVisibility(View.GONE);
                 pBarConnectionStatus.setVisibility(View.GONE);
                 handleWeatherResponce(response.body());
-
             }
 
             @Override
