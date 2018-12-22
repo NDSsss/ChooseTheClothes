@@ -19,14 +19,27 @@
         <!--android:contentDescription="@string/nav_header_desc"-->
         <!--android:paddingTop="@dimen/nav_header_vertical_spacing"-->
         <!--app:srcCompat="@mipmap/ic_launcher_round" />-->
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     <TextView
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
         android:id="@+id/tv_drawer_header_city_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/City"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+    <ImageView
+        android:id="@+id/ic_drawer_temp_refresh"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:tint="@color/purple"
+        android:src="@drawable/ic_refresh"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
+</RelativeLayout>
 
 
     <TextView

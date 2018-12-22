@@ -1,4 +1,4 @@
-package com.example.nds.choosetheclothe;
+package com.example.nds.choosetheclothe.weather;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

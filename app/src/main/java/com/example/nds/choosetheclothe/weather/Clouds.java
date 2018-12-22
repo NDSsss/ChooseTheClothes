@@ -1,5 +1,5 @@
 
-package com.example.nds.choosetheclothe;
+package com.example.nds.choosetheclothe.weather;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
