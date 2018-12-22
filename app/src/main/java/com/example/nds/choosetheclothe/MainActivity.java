@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity
     EventBus mEventBus;
     SelectionInfiniteFragment infiniteScroll;
     BottomNavigationView bnvMain;
+    RelativeLayout rlTempContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +71,8 @@ public class MainActivity extends AppCompatActivity
         bnvMain.setSelectedItemId(R.id.nav_gallery);
         tvTemperature = findViewById(R.id.tv_main_temp);
         tvSityNameDate = findViewById(R.id.tv_main_city);
-        tvTemperature.setOnClickListener(v->loadTemp());
-        tvSityNameDate.setOnClickListener(v->loadTemp());
+        rlTempContainer = findViewById(R.id.rl_main_weather_container);
+        rlTempContainer.setOnClickListener(v->loadTemp());
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 
@@ -171,18 +172,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadTemp(){
-//        tvStatusConnection.setVisibility(View.VISIBLE);
-//        pBarConnectionStatus.setVisibility(View.VISIBLE);
+        startLoading();
         IWeatherService weatherService = App.get(this).getRetrofit().create(IWeatherService.class);
         final retrofit2.Call<WeatherResponce> weatherResponceCall = weatherService.getWeatherById(693805, getResources().getString(R.string.weather_api_key), "metric");
         weatherResponceCall.enqueue(new Callback<WeatherResponce>() {
             @Override
             public void onResponse(retrofit2.Call<WeatherResponce> call, Response<WeatherResponce> response) {
+                completeLoading();
                 handleWeatherResponce(response.body());
             }
 
             @Override
             public void onFailure(retrofit2.Call<WeatherResponce> call, Throwable t) {
+                completeLoading();
                 tvTemperature.setText("Sorry, but server response is: " + t.getMessage());
                 showError(t.getMessage());
             }
