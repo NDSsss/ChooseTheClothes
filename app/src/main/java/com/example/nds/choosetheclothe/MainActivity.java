@@ -1,7 +1,9 @@
 package com.example.nds.choosetheclothe;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -33,17 +35,17 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ILoadingListener {
+        implements ILoadingListener {
 
     TextView tvSityNameDate;
     TextView tvTemperature;
     TextView tvStatusConnection;
     ProgressBar pBarConnectionStatus;
-    ConstraintLayout clContainer;
+    RelativeLayout clContainer;
     RelativeLayout rlProgress;
     EventBus mEventBus;
     SelectionInfiniteFragment infiniteScroll;
-    ImageView ivRefresh;
+    BottomNavigationView bnvMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +55,25 @@ public class MainActivity extends AppCompatActivity
         createFragments();
         clContainer = findViewById(R.id.cl_container);
         rlProgress = findViewById(R.id.rl_progress);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        bnvMain = findViewById(R.id.bnv_main);
+        bnvMain.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.nav_gallery:
+                        openInfiniteScrollFragment();
+                        break;
+                }
+                return false;
+            }
+        });
+        bnvMain.setSelectedItemId(R.id.nav_gallery);
+        tvTemperature = findViewById(R.id.tv_main_temp);
+        tvSityNameDate = findViewById(R.id.tv_main_city);
+        tvTemperature.setOnClickListener(v->loadTemp());
+        tvSityNameDate.setOnClickListener(v->loadTemp());
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -64,35 +83,16 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        tvSityNameDate = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_drawer_header_city_date);
-        tvStatusConnection= (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_progress_bar_drawer_header);
-        pBarConnectionStatus= (ProgressBar) navigationView.getHeaderView(0).findViewById(R.id.progress_bar_drawer);
-        tvTemperature = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_drawer_header_teperatures);
-        ivRefresh = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.ic_drawer_temp_refresh);
-        ivRefresh.setOnClickListener(v->loadTemp());
-        tvSityNameDate.setText("Simferopol");
+//        tvSityNameDate = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_drawer_header_city_date);
+//        tvStatusConnection= (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_progress_bar_drawer_header);
+//        pBarConnectionStatus= (ProgressBar) navigationView.getHeaderView(0).findViewById(R.id.progress_bar_drawer);
+//        tvTemperature = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_drawer_header_teperatures);
+//        ivRefresh = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.ic_drawer_temp_refresh);
+//        ivRefresh.setOnClickListener(v->loadTemp());
+//        tvSityNameDate.setText("Simferopol");
 
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -116,30 +116,28 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            openAddingDragment();
-        } else if (id == R.id.nav_gallery) {
-            openSelectionFragment();
-        } else if (id == R.id.nav_slideshow) {
-            openInfiniteScrollFragment();
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
+//    @SuppressWarnings("StatementWithEmptyBody")
+////    @Override
+////    public boolean onNavigationItemSelected(MenuItem item) {
+////        // Handle navigation view item clicks here.
+////        int id = item.getItemId();
+////
+////        if (id == R.id.nav_camera) {
+////            openAddingDragment();
+////        } else if (id == R.id.nav_gallery) {
+////            openSelectionFragment();
+////        } else if (id == R.id.nav_slideshow) {
+////            openInfiniteScrollFragment();
+//////        } else if (id == R.id.nav_manage) {
+//////
+//////        } else if (id == R.id.nav_share) {
+//////
+//////        } else if (id == R.id.nav_send) {
+////
+////        }
+////
+////        return true;
+////    }
 
     private void createFragments(){
         infiniteScroll = new SelectionInfiniteFragment();
@@ -173,23 +171,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadTemp(){
-        tvStatusConnection.setVisibility(View.VISIBLE);
-        pBarConnectionStatus.setVisibility(View.VISIBLE);
+//        tvStatusConnection.setVisibility(View.VISIBLE);
+//        pBarConnectionStatus.setVisibility(View.VISIBLE);
         IWeatherService weatherService = App.get(this).getRetrofit().create(IWeatherService.class);
         final retrofit2.Call<WeatherResponce> weatherResponceCall = weatherService.getWeatherById(693805, getResources().getString(R.string.weather_api_key), "metric");
         weatherResponceCall.enqueue(new Callback<WeatherResponce>() {
             @Override
             public void onResponse(retrofit2.Call<WeatherResponce> call, Response<WeatherResponce> response) {
-                tvStatusConnection.setVisibility(View.GONE);
-                pBarConnectionStatus.setVisibility(View.GONE);
                 handleWeatherResponce(response.body());
             }
 
             @Override
             public void onFailure(retrofit2.Call<WeatherResponce> call, Throwable t) {
                 tvTemperature.setText("Sorry, but server response is: " + t.getMessage());
-                tvStatusConnection.setVisibility(View.GONE);
-                pBarConnectionStatus.setVisibility(View.GONE);
                 showError(t.getMessage());
             }
         });
@@ -200,7 +194,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void handleWeatherResponce(WeatherResponce responce) {
-        tvTemperature.setText(responce.getName().concat(String.valueOf(responce.getMain().getTemp())));
+        tvTemperature.setText((String.valueOf(responce.getMain().getTemp())));
+        tvSityNameDate.setText(responce.getName());
         mEventBus.notifyEvent(new UpdateTempEvent(responce.getMain().getTemp()));
     }
 
