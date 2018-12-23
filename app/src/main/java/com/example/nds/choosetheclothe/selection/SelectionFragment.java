@@ -40,18 +40,18 @@ public class SelectionFragment extends BaseLoadingFragment {
     }
 
     private void initLists() {
-        listTshirt = new ArrayList<>();
-        listTshirt.add(new Clothe(-3, 15, 5, R.drawable.thirt_warm, "tWarm"));
-        listTshirt.add(new Clothe(13, 20, 5, R.drawable.thirt_midle, "tMiddle"));
-        listTshirt.add(new Clothe(17, 30, 5, R.drawable.thirt_cold, "tCold"));
-        listPans = new ArrayList<>();
-        listPans.add(new Clothe(-3, 15, 5, R.drawable.pans_warm, "pWarm"));
-        listPans.add(new Clothe(13, 20, 5, R.drawable.pans_midle, "pMiddle"));
-        listPans.add(new Clothe(17, 30, 5, R.drawable.pans_cold, "pCold"));
-        listShoes = new ArrayList<>();
-        listShoes.add(new Clothe(-3, 15, 5, R.drawable.shoes_warm, "sWarm"));
-        listShoes.add(new Clothe(13, 20, 5, R.drawable.shoes_midle, "sMiddle"));
-        listShoes.add(new Clothe(17, 30, 5, R.drawable.shoes_cold, "sCold"));
+//        listTshirt = new ArrayList<>();
+//        listTshirt.add(new Clothe(-3, 15, 5, R.drawable.thirt_warm, "tWarm"));
+//        listTshirt.add(new Clothe(13, 20, 5, R.drawable.thirt_midle, "tMiddle"));
+//        listTshirt.add(new Clothe(17, 30, 5, R.drawable.thirt_cold, "tCold"));
+//        listPans = new ArrayList<>();
+//        listPans.add(new Clothe(-3, 15, 5, R.drawable.pans_warm, "pWarm"));
+//        listPans.add(new Clothe(13, 20, 5, R.drawable.pans_midle, "pMiddle"));
+//        listPans.add(new Clothe(17, 30, 5, R.drawable.pans_cold, "pCold"));
+//        listShoes = new ArrayList<>();
+//        listShoes.add(new Clothe(-3, 15, 5, R.drawable.shoes_warm, "sWarm"));
+//        listShoes.add(new Clothe(13, 20, 5, R.drawable.shoes_midle, "sMiddle"));
+//        listShoes.add(new Clothe(17, 30, 5, R.drawable.shoes_cold, "sCold"));
     }
 
     private void initAdapters() {
