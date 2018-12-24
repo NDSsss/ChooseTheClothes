@@ -1,6 +1,7 @@
 package com.example.nds.choosetheclothe.selectioninfinite;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,11 +35,6 @@ public class HorizontalPagerAdapter extends PagerAdapter {
     }
 
     @Override
-    public int getItemPosition(final Object object) {
-        return POSITION_NONE;
-    }
-
-    @Override
     public Object instantiateItem(final ViewGroup container, final int position) {
         Log.d(TAG, "instantiateItem: ");
         final View view;
@@ -49,6 +45,7 @@ public class HorizontalPagerAdapter extends PagerAdapter {
         ((TextView)view.findViewById(R.id.tv_item_clothe_min_temp)).setText(String.valueOf(clothes.get(position).getMinTemp()));
         ((TextView)view.findViewById(R.id.tv_item_clothe_max_temp)).setText(String.valueOf(clothes.get(position).getMaxTemp()));
         view.setOnClickListener(v->mOnItemSelected.itemSelected(clothes.get(position)));
+        view.setTag(String.valueOf(clothes.get(position).getType()).concat(String.valueOf(clothes.get(position).getId())));
         container.addView(view);
         return view;
     }
@@ -63,20 +60,27 @@ public class HorizontalPagerAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return super.getItemPosition(object);
+    }
+
     public void setData(ArrayList<Clothe> clothes){
         this.clothes.clear();
         this.clothes.addAll(clothes);
-        super.notifyDataSetChanged();
-//        super.notifyAll();
         notifyDataSetChanged();
     }
 
+
+
     public void setItem(Clothe clothe){
-        for (int i = 0; i <clothes.size();i++){
-            if(clothes.get(i).getId() == clothe.getId()){
-                clothes.set(i,clothe);
-                super.notifyDataSetChanged();
-                notifyDataSetChanged();
+        if(clothes!=null) {
+            for (int i = 0; i < clothes.size(); i++) {
+                if (clothes.get(i).getId() == clothe.getId()) {
+                    clothes.remove(i);
+                    clothes.set(i, clothe);
+                    notifyDataSetChanged();
+                }
             }
         }
     }

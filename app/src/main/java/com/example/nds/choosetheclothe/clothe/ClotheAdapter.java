@@ -9,15 +9,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.nds.choosetheclothe.R;
+import com.example.nds.choosetheclothe.selectioninfinite.HorizontalPagerAdapter;
 
 import java.util.ArrayList;
 
 public class ClotheAdapter extends RecyclerView.Adapter<ClotheAdapter.ViewHolder> {
 
     private ArrayList<Clothe> clothes;
+    private HorizontalPagerAdapter.OnItemSelected onItemSelected;
 
-    public ClotheAdapter(ArrayList<Clothe> clothes){
+    public ClotheAdapter(ArrayList<Clothe> clothes, HorizontalPagerAdapter.OnItemSelected onItemSelected){
         this.clothes = clothes;
+        this.onItemSelected = onItemSelected;
     }
 
     @NonNull
@@ -34,6 +37,21 @@ public class ClotheAdapter extends RecyclerView.Adapter<ClotheAdapter.ViewHolder
         viewHolder.tvName.setText(clothes.get(i).getName());
     }
 
+    public void setData(ArrayList<Clothe> clothes){
+        this.clothes = clothes;
+        notifyDataSetChanged();
+    }
+
+    public void setItem(Clothe clothe){
+        for(int i = 0; i < clothes.size(); i++){
+            if(clothes.get(i).getId()==clothe.getId()){
+                clothes.remove(i);
+                clothes.add(i,clothe);
+                notifyDataSetChanged();
+            }
+        }
+    }
+
     @Override
     public int getItemCount() {
         return clothes.size();
@@ -46,6 +64,12 @@ public class ClotheAdapter extends RecyclerView.Adapter<ClotheAdapter.ViewHolder
             super(itemView);
             ivIcon = itemView.findViewById(R.id.iv_item_clothe);
             tvName = itemView.findViewById(R.id.tv_item_clothe);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemSelected.itemSelected(clothes.get(getAdapterPosition()));
+                }
+            });
         }
     }
 }

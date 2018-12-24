@@ -29,4 +29,11 @@
         <attr name="icvp_interpolator"/>
     </declare-styleable>
 
+    <declare-styleable name="PageScrollView">
+        <attr name="dsv_orientation" format="enum">
+            <enum name="horizontal" value="0" />
+            <enum name="vertical" value="1" />
+        </attr>
+    </declare-styleable>
+
 </resources>

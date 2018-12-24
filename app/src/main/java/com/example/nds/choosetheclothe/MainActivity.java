@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity
         loadData();
         mEventBus = new EventBus();
         mEventBus.addObserver(this::onEvent);
-        createFragments();
         clContainer = findViewById(R.id.cl_container);
         bnvMain = findViewById(R.id.bnv_main);
         bnvMain.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -91,7 +90,6 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         });
-        bnvMain.setSelectedItemId(R.id.nav_gallery);
         tvTemperature = findViewById(R.id.tv_main_temp);
         tvSityNameDate = findViewById(R.id.tv_main_city);
         rlTempContainer = findViewById(R.id.rl_main_weather_container);
@@ -113,8 +111,11 @@ public class MainActivity extends AppCompatActivity
     private void handleBaseLoad(Message msg) {
         switch (msg.arg1) {
             case LOAD_CLOTHE:
+                createFragments((List<Clothe>)msg.obj);
+                bnvMain.setSelectedItemId(R.id.nav_gallery);
                 SettingClotheEvent event = new SettingClotheEvent((List<Clothe>) msg.obj);
                 mEventBus.notifyEvent(event);
+                loadTemp();
                 completeLoading();
                 break;
             case UPDATE_CLOTHE:
@@ -126,39 +127,10 @@ public class MainActivity extends AppCompatActivity
     private void loadData() {
         Log.d(TAG, "loadData: ");
         startLoading();
-//        base.employeeDao().getAll()
-//                .observeOn(Schedulers.io())
-//                .subscribe(new DisposableSingleObserver<List<Clothe>>() {
-//                    @Override
-//                    public void onSuccess(List<Clothe> clothes) {
-//                        if (clothes == null || clothes.size() == 0) {
-//                            ArrayList<Clothe> newClothes = new ArrayList<>();
-//                            newClothes.add(new Clothe(10, 20, 5, R.drawable.thirt_midle, "tMiddle", Clothe.TYPE_THIRT));
-//                            newClothes.add(new Clothe(15, 30, 5, R.drawable.thirt_cold, "tCold", Clothe.TYPE_THIRT));
-//                            newClothes.add(new Clothe(-15, 10, 5, R.drawable.thirt_warm, "tWarm", Clothe.TYPE_THIRT));
-//                            newClothes.add(new Clothe(10, 20, 5, R.drawable.pans_midle, "pMiddle", Clothe.TYPE_PANS));
-//                            newClothes.add(new Clothe(15, 30, 5, R.drawable.pans_cold, "pCold", Clothe.TYPE_PANS));
-//                            newClothes.add(new Clothe(-15, 10, 5, R.drawable.pans_warm, "pWarm", Clothe.TYPE_PANS));
-//                            newClothes.add(new Clothe(10, 20, 5, R.drawable.shoes_midle, "sMiddle", Clothe.TYPE_SHOES));
-//                            newClothes.add(new Clothe(15, 30, 5, R.drawable.shoes_cold, "sCold", Clothe.TYPE_SHOES));
-//                            newClothes.add(new Clothe(-15, 10, 5, R.drawable.shoes_warm, "sWarm", Clothe.TYPE_SHOES));
-//                            base.employeeDao().insert(newClothes);
-//                        } else {
-//                            SettingClotheEvent event = new SettingClotheEvent(clothes);
-//                            mEventBus.notifyEvent(event);
-//                            completeLoading();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        Log.d(TAG, "onError: "+e.getLocalizedMessage());
-//                    }
-//                });
         new Thread(new Runnable() {
             @Override
             public void run() {
-//                rawClothes = base.employeeDao().getAll();
+                rawClothes = base.employeeDao().getAll();
                 if (rawClothes == null || rawClothes.size() == 0) {
                     Log.d(TAG, "run: ");
                             ArrayList<Clothe> newClothes = new ArrayList<>();
@@ -190,36 +162,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updateClothe(Clothe clothe) {
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                base.employeeDao().update(clothe);
+            }
+        }).start();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void createFragments() {
+    private void createFragments(List<Clothe> rawClothes) {
+        ArrayList<Clothe> clotheArrayList = (ArrayList<Clothe>) rawClothes;
         infiniteScroll = new SelectionInfiniteFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(SelectionInfiniteFragment.SELECTION_INFINITE_FRAGMENT_RAWR_CLOTHES,clotheArrayList);
+        infiniteScroll.setArguments(bundle);
         infiniteScroll.setLoadingListener(this);
         infiniteScroll.setGetEventBus(this::getEventBus);
-        infiniteScroll.initData(clothes);
+//        infiniteScroll.initData(clothes);
         mEventBus.addObserver(infiniteScroll);
     }
 
@@ -244,7 +203,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        loadTemp();
     }
 
     private void loadTemp() {
@@ -263,6 +221,7 @@ public class MainActivity extends AppCompatActivity
                 completeLoading();
                 tvTemperature.setText("Sorry, but server response is: " + t.getMessage());
                 showError(t.getMessage());
+                mEventBus.notifyEvent(new UpdateTempEvent(-100));
             }
         });
     }

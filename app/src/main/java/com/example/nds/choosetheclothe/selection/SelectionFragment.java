@@ -17,10 +17,23 @@ import com.example.nds.choosetheclothe.clothe.ClotheAdapter;
 import java.util.ArrayList;
 
 public class SelectionFragment extends BaseLoadingFragment {
-
+public static final String SELECTION_FRAGMENT_CLOTHES = "SELECTION_FRAGMENT_CLOTHES";
     RecyclerView rvTshirt, rvPans, rvShoes;
     ClotheAdapter adapterThsirt, adapterPans, adapterShoes;
     ArrayList<Clothe> listTshirt, listPans, listShoes;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(getArguments()!=null){
+
+        }
+    }
+
+    private void getArgs(){
+
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -61,9 +74,9 @@ public class SelectionFragment extends BaseLoadingFragment {
         linearLayoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
         linearLayoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
         linearLayoutManager3.setOrientation(LinearLayoutManager.HORIZONTAL);
-        adapterThsirt = new ClotheAdapter(listTshirt);
-        adapterPans = new ClotheAdapter(listPans);
-        adapterShoes = new ClotheAdapter(listShoes);
+//        adapterThsirt = new ClotheAdapter(listTshirt);
+////        adapterPans = new ClotheAdapter(listPans);
+////        adapterShoes = new ClotheAdapter(listShoes);
         rvTshirt.setLayoutManager(linearLayoutManager1);
         rvTshirt.setAdapter(adapterThsirt);
         rvPans.setLayoutManager(linearLayoutManager2);
