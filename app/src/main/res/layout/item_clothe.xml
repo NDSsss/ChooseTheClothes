@@ -11,6 +11,7 @@
         android:orientation="vertical">
 
         <ImageView
+            android:src="@drawable/ic_launcher_background"
             android:id="@+id/iv_item_clothe"
             android:layout_width="100dp"
             android:layout_height="150dp"

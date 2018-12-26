@@ -1,5 +1,6 @@
 package com.example.nds.choosetheclothe.clothe;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,62 +15,57 @@ import com.example.nds.choosetheclothe.selectioninfinite.HorizontalPagerAdapter;
 import java.util.ArrayList;
 
 public class ClotheAdapter extends RecyclerView.Adapter<ClotheAdapter.ViewHolder> {
-
-    private ArrayList<Clothe> clothes;
+    private Context mContext;
+    private ArrayList<Clothe> mDebitList;
     private HorizontalPagerAdapter.OnItemSelected onItemSelected;
 
-    public ClotheAdapter(ArrayList<Clothe> clothes, HorizontalPagerAdapter.OnItemSelected onItemSelected){
-        this.clothes = clothes;
+    public ClotheAdapter(Context context, HorizontalPagerAdapter.OnItemSelected onItemSelected) {
+        this.mContext = context;
+        this.mDebitList = new ArrayList<>();
         this.onItemSelected = onItemSelected;
     }
 
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_clothe,viewGroup,false);
-        ViewHolder viewHolder = new ViewHolder(v);
-        return viewHolder;
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        viewHolder.ivIcon.setImageDrawable(viewHolder.ivIcon.getContext().getResources().getDrawable(clothes.get(i).getResId()));
-        viewHolder.tvName.setText(clothes.get(i).getName());
-    }
-
-    public void setData(ArrayList<Clothe> clothes){
-        this.clothes = clothes;
+    public void setData(ArrayList<Clothe> debitList) {
+        this.mDebitList = debitList;
         notifyDataSetChanged();
     }
 
-    public void setItem(Clothe clothe){
-        for(int i = 0; i < clothes.size(); i++){
-            if(clothes.get(i).getId()==clothe.getId()){
-                clothes.remove(i);
-                clothes.add(i,clothe);
-                notifyDataSetChanged();
-            }
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View v = inflater.inflate(R.layout.item_clothe, parent, false);
+        return new ViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        if (mDebitList != null) {
+            holder.ivIcon.setImageDrawable(mContext.getResources().getDrawable(mDebitList.get(position).getResId()));
+            holder.tvName.setText(mDebitList.get(position).getName());
         }
     }
 
     @Override
     public int getItemCount() {
-        return clothes.size();
+        return mDebitList == null ? 0 : mDebitList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
         ImageView ivIcon;
         TextView tvName;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ivIcon = itemView.findViewById(R.id.iv_item_clothe);
             tvName = itemView.findViewById(R.id.tv_item_clothe);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onItemSelected.itemSelected(clothes.get(getAdapterPosition()));
-                }
-            });
+            itemView.getLayoutParams().width = -2;
+            itemView.setOnClickListener(this::onClick);
+        }
+
+        @Override
+        public void onClick(View view) {
+            onItemSelected.itemSelected(mDebitList.get(getAdapterPosition()));
         }
     }
 }

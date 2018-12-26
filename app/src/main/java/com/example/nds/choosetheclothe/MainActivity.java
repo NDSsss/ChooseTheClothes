@@ -53,8 +53,6 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
     TextView tvSityNameDate;
     TextView tvTemperature;
-    TextView tvStatusConnection;
-    ProgressBar pBarConnectionStatus;
     RelativeLayout clContainer;
     RelativeLayout rlProgress;
     EventBus mEventBus;
@@ -94,9 +92,6 @@ public class MainActivity extends AppCompatActivity
         tvSityNameDate = findViewById(R.id.tv_main_city);
         rlTempContainer = findViewById(R.id.rl_main_weather_container);
         rlTempContainer.setOnClickListener(v -> loadTemp());
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,7 +173,6 @@ public class MainActivity extends AppCompatActivity
         infiniteScroll.setArguments(bundle);
         infiniteScroll.setLoadingListener(this);
         infiniteScroll.setGetEventBus(this::getEventBus);
-//        infiniteScroll.initData(clothes);
         mEventBus.addObserver(infiniteScroll);
     }
 
@@ -186,18 +180,6 @@ public class MainActivity extends AppCompatActivity
         if (infiniteScroll != null) {
             getSupportFragmentManager().beginTransaction().replace(clContainer.getId(), infiniteScroll).commitAllowingStateLoss();
         }
-    }
-
-    private void openSelectionFragment() {
-        SelectionFragment selectionFragment = new SelectionFragment();
-        selectionFragment.setLoadingListener(this);
-        getSupportFragmentManager().beginTransaction().replace(R.id.cl_container, selectionFragment).commit();
-    }
-
-    private void openAddingDragment() {
-        AddingFragment addingFragment = new AddingFragment();
-        addingFragment.setLoadingListener(this);
-        getSupportFragmentManager().beginTransaction().replace(R.id.cl_container, addingFragment).commit();
     }
 
     @Override

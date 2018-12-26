@@ -12,8 +12,8 @@
         android:orientation="horizontal"
         android:visibility="visible">
 
-        <com.example.nds.choosetheclothe.base.PageScrollView
-            android:id="@+id/psv_thirt"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_thirt"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -32,8 +32,8 @@
         android:orientation="horizontal"
         android:visibility="visible">
 
-        <com.example.nds.choosetheclothe.base.PageScrollView
-            android:id="@+id/psv_pans"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_pans"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -52,8 +52,8 @@
         android:orientation="horizontal"
         android:visibility="visible">
 
-        <com.example.nds.choosetheclothe.base.PageScrollView
-            android:id="@+id/psv_shoes"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_shoes"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
