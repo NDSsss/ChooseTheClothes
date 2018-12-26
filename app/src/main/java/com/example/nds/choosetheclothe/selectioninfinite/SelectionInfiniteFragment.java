@@ -168,7 +168,7 @@ public class SelectionInfiniteFragment extends BaseLoadingFragment implements Ho
                 adapterTshirt.setData(filtredClothes);
             } else {
                 Log.d(TAG, "filtreClothe: no tshirts found");
-                showEmptyError(TSHIRT, "No thirts");
+                showEmptyError(TSHIRT, "Нет подходящей одежды\nДобавьте новую или измените меющююся одежду");
             }
             filtredClothes = new ArrayList<>();
             for (int i = 0; i < listPans.size(); i++) {
@@ -181,7 +181,7 @@ public class SelectionInfiniteFragment extends BaseLoadingFragment implements Ho
                 adapterPans.setData(filtredClothes);
             } else {
                 Log.d(TAG, "filtreClothe: no pans found");
-                showEmptyError(PANS, "No pans");
+                showEmptyError(PANS, "Нет подходящей одежды\nДобавьте новую или измените меющююся одежду");
             }
             filtredClothes = new ArrayList<>();
             for (int i = 0; i < listShoes.size(); i++) {
@@ -194,7 +194,7 @@ public class SelectionInfiniteFragment extends BaseLoadingFragment implements Ho
                 adapterShoes.setData(filtredClothes);
             } else {
                 Log.d(TAG, "filtreClothe: no shoes found");
-                showEmptyError(SHOES, "No shoes");
+                showEmptyError(SHOES, "Нет подходящей одежды\nДобавьте новую или измените меющююся обувь");
             }
 
         }
